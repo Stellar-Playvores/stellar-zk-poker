@@ -10,8 +10,6 @@ If you are new to MPC or do not fully grasp the limiations of ZK by itself, plea
 
 I've also written a reusable crate (`stellar-zk-poker-cards`) that others can use to do card-shuffling in their Soroban app.
 
-![Homepage](assets/homepage.png)
-
 ## How it works
 
 ```
