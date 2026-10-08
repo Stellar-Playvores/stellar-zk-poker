@@ -6,8 +6,6 @@ No single party ever sees your cards. A committee of MPC nodes (running TACEO co
 
 Stellar ZK Poker utilizes the [Stellar game studio](https://jamesbachini.github.io/Stellar-Game-Studio/) and the [Ultrahonk soroban verifier](https://github.com/indextree/ultrahonk_soroban_contract). As a ZK nerd new to gaming, I had a lot of fun building this and you'll be happy to hear it's not AI slop :)
 
-If you are new to MPC or do not fully grasp the limiations of ZK by itself, please check out the [slide deck](https://www.canva.com/design/DAHB5JrdEAk/XThK1QgbEATHwZ0rX-W2aA/view?utm_content=DAHB5JrdEAk&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hb4aca74548) which explains why any game that relies on card-shuffling between multiple players cannot use ZK alone.
-
 I've also written a reusable crate (`stellar-zk-poker-cards`) that others can use to do card-shuffling in their Soroban app.
 
 ## How it works
