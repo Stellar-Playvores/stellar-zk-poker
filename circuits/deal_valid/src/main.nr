@@ -6,10 +6,10 @@
 ///
 /// This removes any single-node plaintext deck dependency during prepare/split.
 
-use stellar_poker_lib::cards;
-use stellar_poker_lib::commitments;
-use stellar_poker_lib::merkle;
-use stellar_poker_lib::shuffle;
+use stellar_zk_poker_lib::cards;
+use stellar_zk_poker_lib::commitments;
+use stellar_zk_poker_lib::merkle;
+use stellar_zk_poker_lib::shuffle;
 
 /// Maximum players supported (for fixed circuit size)
 global MAX_PLAYERS: u32 = 6;

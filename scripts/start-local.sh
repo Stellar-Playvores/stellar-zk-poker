@@ -14,9 +14,9 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
-CONFIG_DIR="${PROJECT_DIR}/services/node/config/local"
+CONFIG_DIR="${PROJECT_DIR}/services/stellar-zk-poker-node/config/local"
 
-echo "=== Starting Stellar Poker MPC services locally ==="
+echo "=== Starting Stellar ZK Poker MPC services locally ==="
 echo ""
 
 # Source Soroban env vars if available
@@ -48,17 +48,17 @@ done
 
 echo "Starting MPC Node 0 (port 8101)..."
 NODE_ID=0 PORT=8101 PARTY_CONFIG="${CONFIG_DIR}/party_0.toml" \
-    cargo run -p mpc-node --quiet &
+    cargo run -p stellar-zk-poker-node --quiet &
 PID_NODE0=$!
 
 echo "Starting MPC Node 1 (port 8102)..."
 NODE_ID=1 PORT=8102 PARTY_CONFIG="${CONFIG_DIR}/party_1.toml" \
-    cargo run -p mpc-node --quiet &
+    cargo run -p stellar-zk-poker-node --quiet &
 PID_NODE1=$!
 
 echo "Starting MPC Node 2 (port 8103)..."
 NODE_ID=2 PORT=8103 PARTY_CONFIG="${CONFIG_DIR}/party_2.toml" \
-    cargo run -p mpc-node --quiet &
+    cargo run -p stellar-zk-poker-node --quiet &
 PID_NODE2=$!
 
 sleep 2
@@ -68,12 +68,12 @@ CIRCUIT_DIR="${PROJECT_DIR}/circuits" \
 CRS_DIR="${PROJECT_DIR}/crs" \
 BIND_ADDR="0.0.0.0:8080" \
 SOROBAN_RPC="${SOROBAN_RPC:-}" \
-POKER_TABLE_CONTRACT="${POKER_TABLE_CONTRACT:-}" \
+STELLAR_ZK_POKER_TABLE_CONTRACT="${STELLAR_ZK_POKER_TABLE_CONTRACT:-}" \
 COMMITTEE_SECRET="${COMMITTEE_SECRET:-test_secret}" \
 NETWORK_PASSPHRASE="${NETWORK_PASSPHRASE:-Test SDF Network ; September 2015}" \
 ONCHAIN_TABLE_ID="${ONCHAIN_TABLE_ID:-${TABLE_ID:-0}}" \
 ALLOW_INSECURE_DEV_AUTH="${ALLOW_INSECURE_DEV_AUTH:-0}" \
-    cargo run -p coordinator --quiet &
+    cargo run -p stellar-zk-poker-coordinator --quiet &
 PID_COORD=$!
 
 sleep 1

@@ -1,4 +1,4 @@
-// Card encoding for Stellar Poker.
+// Card encoding for Stellar ZK Poker.
 // Card value = suit * 13 + rank
 // suit: 0=Clubs, 1=Diamonds, 2=Hearts, 3=Spades
 // rank: 0=2, 1=3, ..., 8=10, 9=J, 10=Q, 11=K, 12=A

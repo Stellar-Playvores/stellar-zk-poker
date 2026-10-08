@@ -211,7 +211,7 @@ export default function Home() {
                 letterSpacing: "3px",
               }}
             >
-              POKER
+              STELLAR ZK
             </h1>
             <h2
               className="text-2xl md:text-3xl mt-1"
@@ -222,7 +222,7 @@ export default function Home() {
                 letterSpacing: "2px",
               }}
             >
-              ON STELLAR
+              POKER
             </h2>
           </div>
 
@@ -326,7 +326,7 @@ export default function Home() {
               letterSpacing: "2px",
             }}
           >
-            POKER ON STELLAR
+            STELLAR ZK POKER
           </h1>
           <p
             className="text-[11px] mt-3"

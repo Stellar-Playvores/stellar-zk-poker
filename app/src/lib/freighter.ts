@@ -267,7 +267,7 @@ async function connectViaLegacyApi(): Promise<WalletSession | null> {
 
 // ── localStorage wallet persistence ──
 
-const WALLET_KEY = "stellar_poker_wallet";
+const WALLET_KEY = "stellar_zk_poker_wallet";
 
 function saveWalletAddress(address: string): void {
   try {

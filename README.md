@@ -1,14 +1,14 @@
-# Stellar Poker
+# Stellar ZK Poker
 
 Onchain Texas Hold'em poker on Stellar with private cards using cosnarks (ZKMPC).
 
 No single party ever sees your cards. A committee of MPC nodes (running TACEO coNoir) shuffles and deals using REP3 secret sharing. UltraHonk ZK proofs verify every deal, reveal, and showdown onchain.
 
-This was developed for the [Stellar ZK Hackathon](https://dorahacks.io/hackathon/stellar-hacks-zk-gaming) and utilizes the [Stellar game studio](https://jamesbachini.github.io/Stellar-Game-Studio/) and the [Ultrahonk soroban verifier](https://github.com/indextree/ultrahonk_soroban_contract). As a ZK nerd new to gaming, I had a lot of fun building this and you'll be happy to hear it's not AI slop :)
+Stellar ZK Poker utilizes the [Stellar game studio](https://jamesbachini.github.io/Stellar-Game-Studio/) and the [Ultrahonk soroban verifier](https://github.com/indextree/ultrahonk_soroban_contract). As a ZK nerd new to gaming, I had a lot of fun building this and you'll be happy to hear it's not AI slop :)
 
 If you are new to MPC or do not fully grasp the limiations of ZK by itself, please check out the [slide deck](https://www.canva.com/design/DAHB5JrdEAk/XThK1QgbEATHwZ0rX-W2aA/view?utm_content=DAHB5JrdEAk&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hb4aca74548) which explains why any game that relies on card-shuffling between multiple players cannot use ZK alone.
 
-I've also written a reusable crate that others can use to do card-shuffling in their Soroban app.
+I've also written a reusable crate (`stellar-zk-poker-cards`) that others can use to do card-shuffling in their Soroban app.
 
 ![Homepage](assets/homepage.png)
 
@@ -39,37 +39,36 @@ Multiplayer can be up to 6 players. There is also a Solo mode against an AI (the
 - **Trustless settlement**: All bets, pot calculation, and payouts happen in Soroban smart contracts. Game logic is handled here!
 - **Honest majority**: As long as there is an honest majority of nodes in TACEO (in our case 2 nodes), privacy will be maintained.
 
-![Gameplay](assets/game.png)
-
 ## Contracts on Testnet
- ┌────────────────────┬──────────────────────────────────────────────────────────┐
-  │      Contract      │                         Address                          │
-  ├────────────────────┼──────────────────────────────────────────────────────────┤
-  │ Poker Table        │ [CB7M3V3POQJR66425J3ILLHS3T4EUBRY67R7AVKSM255WBWOZG7XCYGL](https://stellar.expert/explorer/testnet/contract/CB7M3V3POQJR66425J3ILLHS3T4EUBRY67R7AVKSM255WBWOZG7XCYGL) │
-  ├────────────────────┼──────────────────────────────────────────────────────────┤
-  │ Committee Registry │ [GBTYELEQ2YZH2W6SXLHT4AX6TYBHHU7LNNPKJV7J37VS3S5GPA75KRDU](https://stellar.expert/explorer/testnet/account/GBTYELEQ2YZH2W6SXLHT4AX6TYBHHU7LNNPKJV7J37VS3S5GPA75KRDU) │
-  └────────────────────┴──────────────────────────────────────────────────────────┘
+
+┌────────────────────┬──────────────────────────────────────────────────────────┐
+│ Contract │ Address │
+├────────────────────┼──────────────────────────────────────────────────────────┤
+│ Poker Table │ [CB7M3V3POQJR66425J3ILLHS3T4EUBRY67R7AVKSM255WBWOZG7XCYGL](https://stellar.expert/explorer/testnet/contract/CB7M3V3POQJR66425J3ILLHS3T4EUBRY67R7AVKSM255WBWOZG7XCYGL) │
+├────────────────────┼──────────────────────────────────────────────────────────┤
+│ Committee Registry │ [GBTYELEQ2YZH2W6SXLHT4AX6TYBHHU7LNNPKJV7J37VS3S5GPA75KRDU](https://stellar.expert/explorer/testnet/account/GBTYELEQ2YZH2W6SXLHT4AX6TYBHHU7LNNPKJV7J37VS3S5GPA75KRDU) │
+└────────────────────┴──────────────────────────────────────────────────────────┘
 
 Works alongside Stellar's Game Studio already deployed on testnet at [CB4VZAT2U3UC6XFK3N23SKRF2NDCMP3QHJYMCHHFMZO7MRQO6DQ2EMYG](https://stellar.expert/explorer/testnet/contract/CB4VZAT2U3UC6XFK3N23SKRF2NDCMP3QHJYMCHHFMZO7MRQO6DQ2EMYG).
 
 ## Repository Structure
 
 ```
-stellar-poker/
+stellar-zk-poker/
   contracts/
-    poker-table/        -- Main game contract (betting, state machine, settlement)
-    zk-verifier/        -- UltraHonk proof verification (BN254 native ops)
-    committee-registry/ -- MPC committee management and slashing
-    game-hub/           -- Mock Game Hub contract (Stellar Game Studio interface)
+    stellar-zk-poker-table/            -- Main game contract (betting, state machine, settlement)
+    stellar-zk-poker-zk-verifier/      -- UltraHonk proof verification (BN254 native ops)
+    stellar-zk-poker-committee-registry/ -- MPC committee management and slashing
+    stellar-zk-poker-game-hub/         -- Mock Game Hub contract (Stellar Game Studio interface)
   circuits/
     lib/                -- Shared Noir library (cards, commitments, Merkle)
     deal_valid/         -- Proves deck shuffle + deal consistency
     reveal_board_valid/ -- Proves community card reveals match committed deck
     showdown_valid/     -- Proves winner has the best hand
-  stellar-zk-cards/    -- Reusable card game library (encoding, hand eval)
+  stellar-zk-poker-cards/ -- Reusable card game library (encoding, hand eval)
   services/
-    coordinator/        -- Axum HTTP server orchestrating MPC sessions
-    node/               -- MPC node (TACEO coNoir participant)
+    stellar-zk-poker-coordinator/ -- Axum HTTP server orchestrating MPC sessions
+    stellar-zk-poker-node/       -- MPC node (TACEO coNoir participant)
   app/                  -- Next.js web frontend
   tests/                -- Integration and property-based tests
   vendor/               -- Vendored UltraHonk verifier dependencies
@@ -106,7 +105,7 @@ We use Poseidon2 for hashing.
 docker-compose up
 
 # Or run individually:
-cargo run -p coordinator     # Port 8080
+cargo run -p stellar-zk-poker-coordinator   # Port 8080
 cd app && npm run dev        # Port 3000
 ```
 
@@ -173,7 +172,3 @@ Circuits are written in Noir! They are proved inside TACEO MPC network CoNoir.
 ## Difficulties
 
 This was my first time building on Stellar. It was mostly seamless especially with the help of AI tools, but AI really sucks when it comes to privacy. So I wrote down some issues that I ran into in [DIFFICULTIES.md](/DIFFICULTIES.md).
-
-Pay attention to Easter eggs!
-
-![Gameboy mini-game](assets/gameboy.png)

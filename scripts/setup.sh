@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Stellar Poker - Development Setup
+# Stellar ZK Poker - Development Setup
 # Installs all dependencies and verifies the build
 
-echo "=== Stellar Poker Development Setup ==="
+echo "=== Stellar ZK Poker Development Setup ==="
 echo ""
 
 # --- Check Rust ---
@@ -81,8 +81,8 @@ echo "=== Setup Complete ==="
 echo ""
 echo "To run in development mode:"
 echo "  1. Start local Soroban:    docker-compose up soroban"
-echo "  2. Start MPC nodes:        docker-compose up mpc-node-0 mpc-node-1 mpc-node-2"
-echo "  3. Start coordinator:      docker run the coordinator or: cargo run -p coordinator"
+echo "  2. Start MPC nodes:        docker-compose up stellar-zk-poker-node-0 stellar-zk-poker-node-1 stellar-zk-poker-node-2"
+echo "  3. Start coordinator:      docker run the coordinator or: cargo run -p stellar-zk-poker-coordinator"
 echo "  4. Start web app:          cd app && npm run dev"
 echo ""
 echo "Or start everything:         docker-compose up"

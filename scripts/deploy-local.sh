@@ -25,12 +25,12 @@ if ! [[ "$MAX_PLAYERS" =~ ^[0-9]+$ ]] || [ "$MAX_PLAYERS" -lt 2 ] || [ "$MAX_PLA
     exit 1
 fi
 
-echo "=== Stellar Poker Local Deployment ==="
+echo "=== Stellar ZK Poker Local Deployment ==="
 echo ""
 
 # 1. Start Stellar standalone container if not already running
 echo "Starting Stellar standalone network (Docker)..."
-if ! docker ps --format '{{.Names}}' | grep -q stellar; then
+if ! docker ps --format '{{.Names}}' | grep -qx "local"; then
     stellar container start -t future --name local --limits unlimited 2>/dev/null || {
         echo "ERROR: Failed to start Stellar container. Is Docker running?"
         exit 1
@@ -93,7 +93,7 @@ done
 # 4. Build contracts
 echo ""
 echo "Building contracts..."
-for contract_dir in zk-verifier poker-table committee-registry game-hub; do
+for contract_dir in stellar-zk-poker-zk-verifier stellar-zk-poker-table stellar-zk-poker-committee-registry stellar-zk-poker-game-hub; do
     echo "  Building $contract_dir..."
     (cd "$PROJECT_DIR/contracts/$contract_dir" && stellar contract build 2>&1) || {
         echo "ERROR: Failed to build $contract_dir"
@@ -108,33 +108,33 @@ echo "Deploying contracts..."
 
 WASM_DIR="$PROJECT_DIR/target/wasm32v1-none/release"
 
-echo "  Deploying zk-verifier..."
-ZK_VERIFIER=$(stellar contract deploy \
-    --wasm "$WASM_DIR/zk_verifier.wasm" \
+echo "  Deploying stellar-zk-poker-zk-verifier..."
+STELLAR_ZK_POKER_ZK_VERIFIER=$(stellar contract deploy \
+    --wasm "$WASM_DIR/stellar_zk_poker_zk_verifier.wasm" \
     --source "$IDENTITY" \
     --network "$NETWORK")
-echo "    ZK Verifier: $ZK_VERIFIER"
+echo "    ZK Verifier: $STELLAR_ZK_POKER_ZK_VERIFIER"
 
-echo "  Deploying game-hub..."
-GAME_HUB=$(stellar contract deploy \
-    --wasm "$WASM_DIR/game_hub.wasm" \
+echo "  Deploying stellar-zk-poker-game-hub..."
+STELLAR_ZK_POKER_GAME_HUB=$(stellar contract deploy \
+    --wasm "$WASM_DIR/stellar_zk_poker_game_hub.wasm" \
     --source "$IDENTITY" \
     --network "$NETWORK")
-echo "    Game Hub: $GAME_HUB"
+echo "    Game Hub: $STELLAR_ZK_POKER_GAME_HUB"
 
-echo "  Deploying poker-table..."
-POKER_TABLE=$(stellar contract deploy \
-    --wasm "$WASM_DIR/poker_table.wasm" \
+echo "  Deploying stellar-zk-poker-table..."
+STELLAR_ZK_POKER_TABLE=$(stellar contract deploy \
+    --wasm "$WASM_DIR/stellar_zk_poker_table.wasm" \
     --source "$IDENTITY" \
     --network "$NETWORK")
-echo "    Poker Table: $POKER_TABLE"
+echo "    Poker Table: $STELLAR_ZK_POKER_TABLE"
 
-echo "  Deploying committee-registry..."
-COMMITTEE_REGISTRY=$(stellar contract deploy \
-    --wasm "$WASM_DIR/committee_registry.wasm" \
+echo "  Deploying stellar-zk-poker-committee-registry..."
+STELLAR_ZK_POKER_COMMITTEE_REGISTRY=$(stellar contract deploy \
+    --wasm "$WASM_DIR/stellar_zk_poker_committee_registry.wasm" \
     --source "$IDENTITY" \
     --network "$NETWORK")
-echo "    Committee Registry: $COMMITTEE_REGISTRY"
+echo "    Committee Registry: $STELLAR_ZK_POKER_COMMITTEE_REGISTRY"
 
 # 6. Deploy SAC (Stellar Asset Contract) for native XLM as token
 echo ""
@@ -152,9 +152,9 @@ echo "  Token (native XLM SAC): $TOKEN_CONTRACT"
 
 # 7. Initialize zk-verifier
 echo ""
-echo "Initializing zk-verifier..."
+echo "Initializing stellar-zk-poker-zk-verifier..."
 stellar contract invoke \
-    --id "$ZK_VERIFIER" \
+    --id "$STELLAR_ZK_POKER_ZK_VERIFIER" \
     --source "$IDENTITY" \
     --network "$NETWORK" \
     -- initialize \
@@ -182,7 +182,7 @@ for circuit in deal_valid reveal_board_valid showdown_valid; do
         esac
         echo "  Uploading VK for $circuit ($CIRCUIT_TYPE)..."
         stellar contract invoke \
-            --id "$ZK_VERIFIER" \
+            --id "$STELLAR_ZK_POKER_ZK_VERIFIER" \
             --source "$IDENTITY" \
             --network "$NETWORK" \
             -- set_verification_key \
@@ -198,12 +198,12 @@ done
 echo ""
 echo "Creating poker table on-chain..."
 TABLE_ID=$(stellar contract invoke \
-    --id "$POKER_TABLE" \
+    --id "$STELLAR_ZK_POKER_TABLE" \
     --source "$IDENTITY" \
     --network "$NETWORK" \
     -- create_table \
     --admin "$COMMITTEE_ADDRESS" \
-    --config "{\"token\":\"$TOKEN_CONTRACT\",\"min_buy_in\":\"1000000000\",\"max_buy_in\":\"100000000000\",\"small_blind\":\"500000000\",\"big_blind\":\"1000000000\",\"max_players\":$MAX_PLAYERS,\"timeout_ledgers\":100,\"committee\":\"$COMMITTEE_ADDRESS\",\"verifier\":\"$ZK_VERIFIER\",\"game_hub\":\"$GAME_HUB\"}")
+    --config "{\"token\":\"$TOKEN_CONTRACT\",\"min_buy_in\":\"1000000000\",\"max_buy_in\":\"100000000000\",\"small_blind\":\"500000000\",\"big_blind\":\"1000000000\",\"max_players\":$MAX_PLAYERS,\"timeout_ledgers\":100,\"committee\":\"$COMMITTEE_ADDRESS\",\"verifier\":\"$STELLAR_ZK_POKER_ZK_VERIFIER\",\"game_hub\":\"$STELLAR_ZK_POKER_GAME_HUB\"}")
 echo "  Table ID: $TABLE_ID"
 
 # 10. Mint/wrap XLM for players and have them join
@@ -219,7 +219,7 @@ for i in $(seq 1 "$MAX_PLAYERS"); do
     addr="${PLAYER_ADDRESSES[$((i-1))]}"
     echo "  Player $i joining table..."
     stellar contract invoke \
-        --id "$POKER_TABLE" \
+        --id "$STELLAR_ZK_POKER_TABLE" \
         --source "$ident" \
         --network "$NETWORK" \
         -- join_table \
@@ -232,7 +232,7 @@ done
 echo ""
 echo "Starting hand..."
 stellar contract invoke \
-    --id "$POKER_TABLE" \
+    --id "$STELLAR_ZK_POKER_TABLE" \
     --source "$IDENTITY" \
     --network "$NETWORK" \
     -- start_hand \
@@ -243,10 +243,10 @@ ENV_FILE="$PROJECT_DIR/.env.local"
 cat > "$ENV_FILE" << EOF
 # Generated by deploy-local.sh — $(date -u +"%Y-%m-%dT%H:%M:%SZ")
 SOROBAN_RPC=$RPC_URL
-POKER_TABLE_CONTRACT=$POKER_TABLE
-ZK_VERIFIER_CONTRACT=$ZK_VERIFIER
-COMMITTEE_REGISTRY_CONTRACT=$COMMITTEE_REGISTRY
-GAME_HUB_CONTRACT=$GAME_HUB
+STELLAR_ZK_POKER_TABLE_CONTRACT=$STELLAR_ZK_POKER_TABLE
+STELLAR_ZK_POKER_ZK_VERIFIER_CONTRACT=$STELLAR_ZK_POKER_ZK_VERIFIER
+STELLAR_ZK_POKER_COMMITTEE_REGISTRY_CONTRACT=$STELLAR_ZK_POKER_COMMITTEE_REGISTRY
+STELLAR_ZK_POKER_GAME_HUB_CONTRACT=$STELLAR_ZK_POKER_GAME_HUB
 TOKEN_CONTRACT=$TOKEN_CONTRACT
 TABLE_ID=$TABLE_ID
 ONCHAIN_TABLE_ID=$TABLE_ID
@@ -268,10 +268,10 @@ done
 echo ""
 echo "=== Deployment Complete ==="
 echo ""
-echo "  Poker Table:        $POKER_TABLE"
-echo "  ZK Verifier:        $ZK_VERIFIER"
-echo "  Game Hub:           $GAME_HUB"
-echo "  Committee Registry: $COMMITTEE_REGISTRY"
+echo "  Poker Table:        $STELLAR_ZK_POKER_TABLE"
+echo "  ZK Verifier:        $STELLAR_ZK_POKER_ZK_VERIFIER"
+echo "  Game Hub:           $STELLAR_ZK_POKER_GAME_HUB"
+echo "  Committee Registry: $STELLAR_ZK_POKER_COMMITTEE_REGISTRY"
 echo "  Token (native SAC): $TOKEN_CONTRACT"
 echo "  On-chain Table ID:  $TABLE_ID"
 echo "  Committee Address:  $COMMITTEE_ADDRESS"

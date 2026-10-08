@@ -17,7 +17,7 @@ let cachedChainConfig:
   | {
       rpcUrl: string;
       networkPassphrase: string;
-      pokerTableContract: string;
+      stellarZkPokerTableContract: string;
     }
   | null = null;
 
@@ -27,7 +27,7 @@ async function getConfig() {
   cachedChainConfig = {
     rpcUrl: cfg.rpc_url,
     networkPassphrase: cfg.network_passphrase,
-    pokerTableContract: cfg.poker_table_contract,
+    stellarZkPokerTableContract: cfg.stellar_zk_poker_table_contract,
   };
   return cachedChainConfig;
 }
@@ -84,7 +84,7 @@ async function submitWalletTx(
   const cfg = await getConfig();
   const server = new rpc.Server(cfg.rpcUrl, { allowHttp: cfg.rpcUrl.startsWith("http://") });
   const account = await server.getAccount(wallet.address);
-  const contract = new Contract(cfg.pokerTableContract);
+  const contract = new Contract(cfg.stellarZkPokerTableContract);
 
   const tx = new TransactionBuilder(account, {
     fee: BASE_FEE,

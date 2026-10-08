@@ -71,7 +71,7 @@ export interface CommitteeStatusResponse {
 export interface ChainConfigResponse {
   rpc_url: string;
   network_passphrase: string;
-  poker_table_contract: string;
+  stellar_zk_poker_table_contract: string;
 }
 
 export interface CreateTableResponse {
@@ -153,7 +153,7 @@ function buildAuthMessage(
   nonce: string,
   timestamp: number
 ): string {
-  return `stellar-poker|${address}|${tableId}|${action}|${nonce}|${timestamp}`;
+  return `stellar-zk-poker|${address}|${tableId}|${action}|${nonce}|${timestamp}`;
 }
 
 async function buildAuthHeaders(

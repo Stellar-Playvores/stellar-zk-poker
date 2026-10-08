@@ -28,19 +28,19 @@ if os.path.exists(ENV_FILE):
                 k, v = line.split("=", 1)
                 env_vars[k] = v.strip('"')
 
-POKER_TABLE_CONTRACT = env_vars.get("POKER_TABLE_CONTRACT", "")
+STELLAR_ZK_POKER_TABLE_CONTRACT = env_vars.get("STELLAR_ZK_POKER_TABLE_CONTRACT", "")
 PLAYER1_ADDRESS = env_vars.get("PLAYER1_ADDRESS", "")
 PLAYER2_ADDRESS = env_vars.get("PLAYER2_ADDRESS", "")
 TABLE_ID = int(env_vars.get("TABLE_ID", os.environ.get("TABLE_ID", "0")))
-ON_CHAIN = bool(POKER_TABLE_CONTRACT)
+ON_CHAIN = bool(STELLAR_ZK_POKER_TABLE_CONTRACT)
 
 if ON_CHAIN:
-    print(f"On-chain mode: contract={POKER_TABLE_CONTRACT}")
+    print(f"On-chain mode: contract={STELLAR_ZK_POKER_TABLE_CONTRACT}")
     print(f"  Table ID: {TABLE_ID}")
     print(f"  Player 1: {PLAYER1_ADDRESS}")
     print(f"  Player 2: {PLAYER2_ADDRESS}")
 else:
-    print("Off-chain mode (no POKER_TABLE_CONTRACT in .env.local)")
+    print("Off-chain mode (no STELLAR_ZK_POKER_TABLE_CONTRACT in .env.local)")
 
 # --- Stellar key helpers ---
 
@@ -71,7 +71,7 @@ def _base32_encode(data: bytes) -> str:
 
 def make_auth_headers(signing_key: SigningKey, address: str, table_id: int, action: str, nonce: int) -> dict:
     timestamp = int(time.time())
-    message = f"stellar-poker|{address}|{table_id}|{action}|{nonce}|{timestamp}"
+    message = f"stellar-zk-poker|{address}|{table_id}|{action}|{nonce}|{timestamp}"
     sig = signing_key.sign(message.encode()).signature
     return {
         "x-player-address": address,
@@ -84,12 +84,12 @@ def make_auth_headers(signing_key: SigningKey, address: str, table_id: int, acti
 # --- On-chain betting helpers ---
 
 def stellar_player_action(player_identity: str, table_id: int, player_address: str, action_json: str):
-    """Call player_action on the poker-table contract."""
+    """Call player_action on the stellar-zk-poker-table contract."""
     if not ON_CHAIN:
         return True
     cmd = [
         "stellar", "contract", "invoke",
-        "--id", POKER_TABLE_CONTRACT,
+        "--id", STELLAR_ZK_POKER_TABLE_CONTRACT,
         "--source", player_identity,
         "--rpc-url", "http://localhost:8000/soroban/rpc",
         "--network-passphrase", "Standalone Network ; February 2017",
@@ -113,7 +113,7 @@ def get_on_chain_phase():
         return None
     cmd = [
         "stellar", "contract", "invoke",
-        "--id", POKER_TABLE_CONTRACT,
+        "--id", STELLAR_ZK_POKER_TABLE_CONTRACT,
         "--source", "committee-local",
         "--rpc-url", "http://localhost:8000/soroban/rpc",
         "--network-passphrase", "Standalone Network ; February 2017",
@@ -142,7 +142,7 @@ def ensure_on_chain_ready_for_deal():
         print(f"  On-chain phase is {phase}; starting a new hand...")
         cmd = [
             "stellar", "contract", "invoke",
-            "--id", POKER_TABLE_CONTRACT,
+            "--id", STELLAR_ZK_POKER_TABLE_CONTRACT,
             "--source", "committee-local",
             "--rpc-url", "http://localhost:8000/soroban/rpc",
             "--network-passphrase", "Standalone Network ; February 2017",

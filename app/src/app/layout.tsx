@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Poker on Stellar",
-  description: "Onchain poker with private cards via MPC + ZK proofs on Stellar",
+  title: "Stellar ZK Poker",
+  description: "Onchain Texas Hold'em with private cards via MPC + ZK proofs on Stellar",
 };
 
 export default function RootLayout({

@@ -63,7 +63,8 @@ download_pinned_nargo() {
     if [ ! -x "${version_dir}/nargo" ]; then
         url="https://github.com/noir-lang/noir/releases/download/${EXPECTED_NOIR_TAG}/${asset}"
         echo "Downloading ${url}" >&2
-        curl -fsSL -o "${tarball_path}" "${url}"
+        curl -fsSL --retry 5 --retry-all-errors --retry-delay 5 \
+            -o "${tarball_path}" "${url}"
         tar -xzf "${tarball_path}" -C "${version_dir}"
         chmod +x "${version_dir}/nargo"
     fi

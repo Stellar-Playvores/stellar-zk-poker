@@ -3,10 +3,10 @@
 /// Derives the same secret deck from party contributions and reveals the
 /// next deterministic board card indices not yet used.
 
-use stellar_poker_lib::cards;
-use stellar_poker_lib::commitments;
-use stellar_poker_lib::merkle;
-use stellar_poker_lib::shuffle;
+use stellar_zk_poker_lib::cards;
+use stellar_zk_poker_lib::commitments;
+use stellar_zk_poker_lib::merkle;
+use stellar_zk_poker_lib::shuffle;
 
 /// Maximum cards that can be revealed at once (flop = 3)
 global MAX_REVEAL: u32 = 3;

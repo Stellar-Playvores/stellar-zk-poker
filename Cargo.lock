@@ -508,42 +508,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "committee-registry"
-version = "0.1.0"
-dependencies = [
- "soroban-sdk",
-]
-
-[[package]]
 name = "const-oid"
 version = "0.9.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2459377285ad874054d797f3ccebf984978aa39129f6eafde5cdc8315b612f8"
-
-[[package]]
-name = "coordinator"
-version = "0.1.0"
-dependencies = [
- "ark-bn254 0.4.0",
- "ark-ff 0.4.2",
- "axum",
- "base64",
- "ed25519-dalek",
- "futures",
- "hex",
- "rand",
- "reqwest",
- "serde",
- "serde_json",
- "sha2",
- "stellar-strkey",
- "tempfile",
- "tokio",
- "tower-http 0.5.2",
- "tracing",
- "tracing-subscriber 0.3.22",
- "uuid",
-]
 
 [[package]]
 name = "core-foundation"
@@ -1105,13 +1073,6 @@ dependencies = [
  "memchr",
  "pin-project-lite",
  "slab",
-]
-
-[[package]]
-name = "game-hub"
-version = "0.1.0"
-dependencies = [
- "soroban-sdk",
 ]
 
 [[package]]
@@ -1697,25 +1658,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "mpc-node"
-version = "0.1.0"
-dependencies = [
- "ark-bn254 0.4.0",
- "ark-ff 0.4.2",
- "axum",
- "base64",
- "hex",
- "rand",
- "reqwest",
- "serde",
- "serde_json",
- "tempfile",
- "tokio",
- "tracing",
- "tracing-subscriber 0.3.22",
-]
-
-[[package]]
 name = "native-tls"
 version = "0.2.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1910,14 +1852,6 @@ name = "pkg-config"
 version = "0.3.32"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7edddbd0b52d732b21ad9a5fab5c704c14cd949e5e9a1ec5929a24fded1b904c"
-
-[[package]]
-name = "poker-table"
-version = "0.1.0"
-dependencies = [
- "soroban-sdk",
- "stellar-zk-cards",
-]
 
 [[package]]
 name = "potential_utf"
@@ -2689,10 +2623,84 @@ dependencies = [
 ]
 
 [[package]]
-name = "stellar-zk-cards"
+name = "stellar-zk-poker-cards"
 version = "0.1.0"
 dependencies = [
  "soroban-sdk",
+]
+
+[[package]]
+name = "stellar-zk-poker-committee-registry"
+version = "0.1.0"
+dependencies = [
+ "soroban-sdk",
+]
+
+[[package]]
+name = "stellar-zk-poker-coordinator"
+version = "0.1.0"
+dependencies = [
+ "ark-bn254 0.4.0",
+ "ark-ff 0.4.2",
+ "axum",
+ "base64",
+ "ed25519-dalek",
+ "futures",
+ "hex",
+ "rand",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "sha2",
+ "stellar-strkey",
+ "tempfile",
+ "tokio",
+ "tower-http 0.5.2",
+ "tracing",
+ "tracing-subscriber 0.3.22",
+ "uuid",
+]
+
+[[package]]
+name = "stellar-zk-poker-game-hub"
+version = "0.1.0"
+dependencies = [
+ "soroban-sdk",
+]
+
+[[package]]
+name = "stellar-zk-poker-node"
+version = "0.1.0"
+dependencies = [
+ "ark-bn254 0.4.0",
+ "ark-ff 0.4.2",
+ "axum",
+ "base64",
+ "hex",
+ "rand",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "tokio",
+ "tracing",
+ "tracing-subscriber 0.3.22",
+]
+
+[[package]]
+name = "stellar-zk-poker-table"
+version = "0.1.0"
+dependencies = [
+ "soroban-sdk",
+ "stellar-zk-poker-cards",
+]
+
+[[package]]
+name = "stellar-zk-poker-zk-verifier"
+version = "0.1.0"
+dependencies = [
+ "soroban-sdk",
+ "ultrahonk_soroban_verifier",
 ]
 
 [[package]]
@@ -3751,14 +3759,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.116",
-]
-
-[[package]]
-name = "zk-verifier"
-version = "0.1.0"
-dependencies = [
- "soroban-sdk",
- "ultrahonk_soroban_verifier",
 ]
 
 [[package]]

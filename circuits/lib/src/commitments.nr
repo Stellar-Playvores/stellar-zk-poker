@@ -1,4 +1,4 @@
-// Poseidon2 commitment utilities for Stellar Poker.
+// Poseidon2 commitment utilities for Stellar ZK Poker.
 // Uses Poseidon2 permutation over BN254.
 
 // Poseidon2 hash: message_length must equal array length

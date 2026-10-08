@@ -1,5 +1,5 @@
 [package]
-name = "stellar_poker_lib"
+name = "stellar_zk_poker_lib"
 type = "lib"
-authors = ["Stellar Poker"]
+authors = ["Stellar ZK Poker"]
 compiler_version = ">=0.36.0"

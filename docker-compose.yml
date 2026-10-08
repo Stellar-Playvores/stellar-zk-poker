@@ -14,10 +14,10 @@ services:
       retries: 30
 
   # MPC Node 0
-  mpc-node-0:
+  stellar-zk-poker-node-0:
     build:
       context: .
-      dockerfile: services/node/Dockerfile
+      dockerfile: services/stellar-zk-poker-node/Dockerfile
     environment:
       NODE_ID: "0"
       PORT: "8101"
@@ -31,13 +31,13 @@ services:
     volumes:
       - crs-data:/app/crs
       - circuit-artifacts:/app/circuits
-      - ./services/node/config:/app/config:ro
+      - ./services/stellar-zk-poker-node/config:/app/config:ro
 
   # MPC Node 1
-  mpc-node-1:
+  stellar-zk-poker-node-1:
     build:
       context: .
-      dockerfile: services/node/Dockerfile
+      dockerfile: services/stellar-zk-poker-node/Dockerfile
     environment:
       NODE_ID: "1"
       PORT: "8102"
@@ -51,13 +51,13 @@ services:
     volumes:
       - crs-data:/app/crs
       - circuit-artifacts:/app/circuits
-      - ./services/node/config:/app/config:ro
+      - ./services/stellar-zk-poker-node/config:/app/config:ro
 
   # MPC Node 2
-  mpc-node-2:
+  stellar-zk-poker-node-2:
     build:
       context: .
-      dockerfile: services/node/Dockerfile
+      dockerfile: services/stellar-zk-poker-node/Dockerfile
     environment:
       NODE_ID: "2"
       PORT: "8103"
@@ -71,17 +71,17 @@ services:
     volumes:
       - crs-data:/app/crs
       - circuit-artifacts:/app/circuits
-      - ./services/node/config:/app/config:ro
+      - ./services/stellar-zk-poker-node/config:/app/config:ro
 
   # Coordinator (orchestrates MPC + serves API to web app)
-  coordinator:
+  stellar-zk-poker-coordinator:
     build:
       context: .
-      dockerfile: services/coordinator/Dockerfile
+      dockerfile: services/stellar-zk-poker-coordinator/Dockerfile
     environment:
-      MPC_NODE_0: "http://mpc-node-0:8101"
-      MPC_NODE_1: "http://mpc-node-1:8102"
-      MPC_NODE_2: "http://mpc-node-2:8103"
+      MPC_NODE_0: "http://stellar-zk-poker-node-0:8101"
+      MPC_NODE_1: "http://stellar-zk-poker-node-1:8102"
+      MPC_NODE_2: "http://stellar-zk-poker-node-2:8103"
       SOROBAN_RPC: "http://soroban:8000/soroban/rpc"
       CIRCUIT_DIR: "/app/circuits"
       CRS_DIR: "/app/crs"
@@ -94,11 +94,11 @@ services:
     depends_on:
       soroban:
         condition: service_healthy
-      mpc-node-0:
+      stellar-zk-poker-node-0:
         condition: service_started
-      mpc-node-1:
+      stellar-zk-poker-node-1:
         condition: service_started
-      mpc-node-2:
+      stellar-zk-poker-node-2:
         condition: service_started
 
   # Web app
